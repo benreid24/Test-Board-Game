@@ -17,6 +17,12 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "options": {
+                "shell": {
+                    "executable": "C:/Program Files/Git/bin/bash.exe",
+                    "args": ["-c"]
+                }
             }
         },
         {
@@ -29,7 +35,13 @@
             },
             "dependsOn": [
                 "cmake generate"
-            ]
+            ],
+            "options": {
+                "shell": {
+                    "executable": "C:/Program Files/Git/bin/bash.exe",
+                    "args": ["-c"]
+                }
+            }
         },
         {
             "label": "run",

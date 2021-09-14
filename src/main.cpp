@@ -1,3 +1,4 @@
+#include "Grid.hpp"
 #include <BLIB/Engine.hpp>
 #include <BLIB/Logging.hpp>
 #include <BLIB/Media/Shapes.hpp>
@@ -6,41 +7,30 @@
 
 class DemoEngineState : public bl::engine::State {
 public:
-    static constexpr float DegPerSec = 60.f;
-
     static bl::engine::State::Ptr create() { return Ptr(new DemoEngineState()); }
 
     virtual const char* name() const { return "DemoEngineState"; }
 
-    virtual void makeActive(bl::engine::Engine& engine) {
-        triangle.setPosition(engine.settings().videoMode().width / 2,
-                             engine.settings().videoMode().height / 2);
+    virtual void activate(bl::engine::Engine& engine) override {
         BL_LOG_INFO << "DemoEngineState activated";
     }
 
+    virtual void deactivate(bl::engine::Engine&) override {}
+
     virtual void update(bl::engine::Engine& engine, float dt) override {
-        triangle.rotate(dt * DegPerSec);
+        // TODO
     }
 
     virtual void render(bl::engine::Engine& engine, float lag) override {
-        // Account for lag
-        const float og = triangle.getRotation();
-        triangle.rotate(lag * DegPerSec);
-
-        engine.window().clear(sf::Color::Cyan);
-        engine.window().draw(triangle);
+        engine.window().clear();
+        grid.render(engine.window());
         engine.window().display();
-
-        triangle.setRotation(og);
     }
 
 private:
-    bl::shapes::Triangle triangle;
+    Grid grid;
 
-    DemoEngineState()
-    : triangle({0, 0}, {120, 0}, {60, 120}) {
-        triangle.setFillColor(sf::Color::Red);
-    }
+    DemoEngineState() = default;
 };
 
 int main() {
@@ -53,9 +43,9 @@ int main() {
     BL_LOG_INFO << "Creating engine instance";
     const bl::engine::Settings engineSettings =
         bl::engine::Settings()
-            .withVideoMode(sf::VideoMode(800, 600, 32))
+            .withVideoMode(sf::VideoMode(1000, 800, 32))
             .withWindowStyle(sf::Style::Close | sf::Style::Titlebar)
-            .withWindowTitle("BLIB Project");
+            .withWindowTitle("Game Concept");
     bl::engine::Engine engine(engineSettings);
     BL_LOG_INFO << "Created engine";
 
