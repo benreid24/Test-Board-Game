@@ -1,4 +1,5 @@
 #include "Grid.hpp"
+#include "Tray.hpp"
 #include <BLIB/Engine.hpp>
 #include <BLIB/Logging.hpp>
 #include <BLIB/Media/Shapes.hpp>
@@ -11,23 +12,23 @@ public:
 
     virtual const char* name() const { return "DemoEngineState"; }
 
-    virtual void activate(bl::engine::Engine& engine) override {
+    virtual void activate(bl::engine::Engine&) override {
         BL_LOG_INFO << "DemoEngineState activated";
     }
 
     virtual void deactivate(bl::engine::Engine&) override {}
 
-    virtual void update(bl::engine::Engine& engine, float dt) override {
-        // TODO
-    }
+    virtual void update(bl::engine::Engine&, float) override { tray.update(); }
 
-    virtual void render(bl::engine::Engine& engine, float lag) override {
+    virtual void render(bl::engine::Engine& engine, float) override {
         engine.window().clear();
-        grid.render(engine.window());
+        grid.render(engine.window(), tray.get());
+        tray.render(engine.window());
         engine.window().display();
     }
 
 private:
+    Tray tray;
     Grid grid;
 
     DemoEngineState() = default;
